@@ -42,6 +42,9 @@ enum TEST_ID {
     CBLOOMFILTER_DESERIALIZE,
     CDISKBLOCKINDEX_DESERIALIZE,
     CTXOUTCOMPRESSOR_DESERIALIZE,
+    CEXTKEY_DESERIALIZE,
+    CEXTPUBKEY_DESERIALIZE,
+    UINT256_DESERIALIZE,
     TEST_ID_END
 };
 
@@ -243,6 +246,40 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
             try
             {
                 ds >> toc;
+            } catch (const std::ios_base::failure& e) {return 0;}
+
+            break;
+        }
+        case CEXTKEY_DESERIALIZE:
+        {
+            try
+            {
+                CExtKey ek;
+                ds >> ek;
+            } catch (const std::ios_base::failure& e) {return 0;}
+            /* CExtKey throws runtime_error if key size is invalid */
+            catch (const std::runtime_error& e) { return 0; }
+
+            break;
+        }
+        case CEXTPUBKEY_DESERIALIZE:
+        {
+            try
+            {
+                CExtPubKey epk;
+                ds >> epk;
+            } catch (const std::ios_base::failure& e) {return 0;}
+            /* CExtPubKey throws runtime_error if key size is invalid */
+            catch (const std::runtime_error& e) { return 0; }
+
+            break;
+        }
+        case UINT256_DESERIALIZE:
+        {
+            try
+            {
+                uint256 u256;
+                ds >> u256;
             } catch (const std::ios_base::failure& e) {return 0;}
 
             break;
