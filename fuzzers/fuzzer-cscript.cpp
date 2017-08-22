@@ -19,7 +19,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     CScript cs;
 
     while ( size > 0 ) {
-        uint8_t choice = data[0]; size--;
+        uint8_t choice = data[0];
+        size--;
+        data++;
 
         switch ( choice ) {
             case    SER_INT64:
@@ -28,6 +30,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
                     int64_t i;
                     memcpy(&i, data, sizeof(i));
                     size -= sizeof(i);
+                    data += sizeof(i);
 
                     cs << i;
                 }
@@ -38,6 +41,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
                     enum opcodetype ot = (enum opcodetype)data[0];
                     size--;
+                    data++;
 
                     cs << ot;
                 }
@@ -51,7 +55,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
                 {
                     if ( size < sizeof(uint16_t) ) break;
                     uint16_t vector_size = (data[0] << 8) + data[1];
-                    size -= 2;
+                    size -= sizeof(uint16_t);
+                    data += sizeof(uint16_t);
                     std::vector<uint8_t> v(vector_size, 0);
 
                     cs << v;
@@ -76,6 +81,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
                     enum opcodetype ot = (enum opcodetype)data[0];
                     size--;
+                    data++;
 
                     cs.Find(ot);
                 }
