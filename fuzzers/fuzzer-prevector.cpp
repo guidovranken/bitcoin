@@ -11,13 +11,18 @@
  * the inputs again.
  */
 
+
 template<unsigned int N, typename T>
 class prevector_tester {
     typedef std::vector<T> realtype;
     realtype real_vector;
     realtype real_vector_alt;
 
+#ifndef SIZETYPE_UINT16_T
     typedef prevector<N, T> pretype;
+#else
+    typedef prevector<N, T, uint16_t> pretype;
+#endif
     pretype pre_vector;
     pretype pre_vector_alt;
 
@@ -65,6 +70,7 @@ class prevector_tester {
         BOOST_REVERSE_FOREACH(const T& v, const_pre_vector) {
              local_check(v == real_vector[--pos]);
         }
+#ifndef SIZETYPE_UINT16_T
         CDataStream ss1(SER_DISK, 0);
         CDataStream ss2(SER_DISK, 0);
         ss1 << real_vector;
@@ -73,6 +79,7 @@ class prevector_tester {
         for (Size s = 0; s < ss1.size(); s++) {
             local_check_equal(ss1[s], ss2[s]);
         }
+#endif
     }
 
 public:
@@ -369,13 +376,21 @@ class prevector_fuzzer
         }
 
         uint16_t get_short(void) {
+#ifndef SIZETYPE_UINT16_T
             uint16_t s;
+#else
+            uint8_t s;
+#endif
             get_data(&s, sizeof(s));
             return s;
         }
 
         uint16_t get_short(bool masked) {
+#ifndef SIZETYPE_UINT16_T
             uint16_t s;
+#else
+            uint8_t s;
+#endif
             get_data(&s, sizeof(s));
 
             if ( masked ) {
