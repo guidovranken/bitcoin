@@ -11,17 +11,13 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv)
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
-    FILE* fp;
     static const CChainParams chainparams = Params("main");
 
-    fp = fopen("/tmp/bootstrap", "wb");
-    if ( fp == NULL )
-    {
+    FILE* fp = std::tmpfile();
+    if ( fwrite(data, 1, size, fp) != size ) {
         abort();
     }
-    fwrite(data, size, 1, fp);
-    fclose(fp);
-    fp = fopen("/tmp/bootstrap", "rb");
+    rewind(fp);
     LoadExternalBlockFile(chainparams, fp);
     return 0;
 }
