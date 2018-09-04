@@ -3,7 +3,8 @@ Unauthenticated REST Interface
 
 The REST API can be enabled with the `-rest` option.
 
-The interface runs on the same port as the JSON-RPC interface, by default port 8332 for mainnet and port 18332 for testnet.
+The interface runs on the same port as the JSON-RPC interface, by default port 8332 for mainnet, port 18332 for testnet,
+and port 18443 for regtest.
 
 Supported API
 -------------
@@ -44,7 +45,7 @@ Only supports JSON as output format.
 * verificationprogress : (numeric) estimate of verification progress [0..1]
 * chainwork : (string) total amount of work in active chain, in hexadecimal
 * pruned : (boolean) if the blocks are subject to pruning
-* pruneheight : (numeric) heighest block available
+* pruneheight : (numeric) highest block available
 * softforks : (array) status of softforks in progress
 * bip9_softforks : (object) status of BIP9 softforks in progress
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 The Bitcoin Core developers
+// Copyright (c) 2015-2018 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,13 +26,13 @@ bool InitHTTPServer();
  * This is separate from InitHTTPServer to give users race-condition-free time
  * to register their handlers between InitHTTPServer and StartHTTPServer.
  */
-bool StartHTTPServer();
+void StartHTTPServer();
 /** Interrupt HTTP server threads */
 void InterruptHTTPServer();
 /** Stop HTTP server */
 void StopHTTPServer();
 
-/** Change logging level for libevent. Removes BCLog::LIBEVENT from logCategories if
+/** Change logging level for libevent. Removes BCLog::LIBEVENT from log categories if
  * libevent doesn't support debug logging.*/
 bool UpdateHTTPServerLogging(bool enable);
 
@@ -61,7 +61,7 @@ private:
     bool replySent;
 
 public:
-    HTTPRequest(struct evhttp_request* req);
+    explicit HTTPRequest(struct evhttp_request* req);
     ~HTTPRequest();
 
     enum RequestMethod {
@@ -74,21 +74,21 @@ public:
 
     /** Get requested URI.
      */
-    std::string GetURI();
+    std::string GetURI() const;
 
     /** Get CService (address:ip) for the origin of the http request.
      */
-    CService GetPeer();
+    CService GetPeer() const;
 
     /** Get request method.
      */
-    RequestMethod GetRequestMethod();
+    RequestMethod GetRequestMethod() const;
 
     /**
      * Get the request header specified by hdr, or an empty string.
      * Return a pair (isPresent,string).
      */
-    std::pair<bool, std::string> GetHeader(const std::string& hdr);
+    std::pair<bool, std::string> GetHeader(const std::string& hdr) const;
 
     /**
      * Read request body.
